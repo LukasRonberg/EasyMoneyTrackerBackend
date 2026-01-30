@@ -1,6 +1,6 @@
-package app.money.tracker.backend.repositories;
+package app.money.tracker.backend.repository;
 
-import app.money.tracker.backend.entities.CategoryEntity;
+import app.money.tracker.backend.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

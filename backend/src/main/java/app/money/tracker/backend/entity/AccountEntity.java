@@ -1,4 +1,4 @@
-package app.money.tracker.backend.entities;
+package app.money.tracker.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
