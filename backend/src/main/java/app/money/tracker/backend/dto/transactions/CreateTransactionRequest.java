@@ -1,24 +1,31 @@
-package app.money.tracker.backend.dto;
+package app.money.tracker.backend.dto.transactions;
 
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
-@Builder
-public class TransactionResponse {
+@Setter
+public class CreateTransactionRequest {
 
-    private UUID id;
+    @NotNull
     private UUID accountId;
+
     private UUID categoryId;
+
+    @NotNull
+    @Positive
     private BigDecimal amount;
+
+    @NotNull
     private LocalDate transactionDate;
+
     private String description;
+
     private String merchant;
-    private OffsetDateTime createdAt;
-    private OffsetDateTime updatedAt;
 }

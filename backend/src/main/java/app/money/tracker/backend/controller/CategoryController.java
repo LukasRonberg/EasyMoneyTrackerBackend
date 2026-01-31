@@ -1,7 +1,7 @@
 package app.money.tracker.backend.controller;
 
-import app.money.tracker.backend.dto.CategoryResponse;
-import app.money.tracker.backend.dto.CreateCategoryRequest;
+import app.money.tracker.backend.dto.category.CategoryResponse;
+import app.money.tracker.backend.dto.category.CreateCategoryRequest;
 import app.money.tracker.backend.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

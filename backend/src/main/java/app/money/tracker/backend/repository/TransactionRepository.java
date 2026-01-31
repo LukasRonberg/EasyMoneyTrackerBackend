@@ -1,6 +1,8 @@
 package app.money.tracker.backend.repository;
 
-import app.money.tracker.backend.dto.CategoryTotalResponse;
+import app.money.tracker.backend.dto.category.CategoryTotalResponse;
+import app.money.tracker.backend.dto.category.MonthlyTotalResponse;
+import app.money.tracker.backend.dto.transactions.TransactionTotalResponse;
 import app.money.tracker.backend.entity.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -60,5 +62,42 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
             @Param("fromDate") LocalDate fromDate,
             @Param("toDate") LocalDate toDate,
             @Param("accountId") UUID accountId
+    );
+
+    @Query("""
+    select new app.money.tracker.backend.dto.MonthlyTotalResponse(
+        cast(function('date_trunc', 'month', t.transactionDate) as java.time.LocalDate),
+        coalesce(sum(t.amount), 0)
+    )
+    from TransactionEntity t
+    where t.user.id = :userId
+      and t.transactionDate between :fromDate and :toDate
+      and (:accountId is null or t.account.id = :accountId)
+    group by function('date_trunc', 'month', t.transactionDate)
+    order by function('date_trunc', 'month', t.transactionDate)
+""")
+    List<MonthlyTotalResponse> sumMonthly(
+            @Param("userId") UUID userId,
+            @Param("fromDate") LocalDate fromDate,
+            @Param("toDate") LocalDate toDate,
+            @Param("accountId") UUID accountId
+    );
+
+    @Query("""
+    select new app.money.tracker.backend.dto.TransactionTotalResponse(
+        coalesce(sum(t.amount), 0)
+    )
+    from TransactionEntity t
+    where t.user.id = :userId
+      and t.transactionDate between :fromDate and :toDate
+      and (:accountId is null or t.account.id = :accountId)
+      and (:categoryId is null or t.category.id = :categoryId)
+""")
+    TransactionTotalResponse sumTotal(
+            @Param("userId") UUID userId,
+            @Param("fromDate") LocalDate fromDate,
+            @Param("toDate") LocalDate toDate,
+            @Param("accountId") UUID accountId,
+            @Param("categoryId") UUID categoryId
     );
 }

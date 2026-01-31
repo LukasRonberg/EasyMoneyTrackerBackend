@@ -1,8 +1,9 @@
 package app.money.tracker.backend.service;
 
-import app.money.tracker.backend.dto.CategoryTotalResponse;
-import app.money.tracker.backend.dto.CreateTransactionRequest;
-import app.money.tracker.backend.dto.TransactionResponse;
+import app.money.tracker.backend.dto.category.CategoryTotalResponse;
+import app.money.tracker.backend.dto.transactions.CreateTransactionRequest;
+import app.money.tracker.backend.dto.category.MonthlyTotalResponse;
+import app.money.tracker.backend.dto.transactions.TransactionTotalResponse;
 import app.money.tracker.backend.entity.AccountEntity;
 import app.money.tracker.backend.entity.CategoryEntity;
 import app.money.tracker.backend.entity.TransactionEntity;
@@ -127,6 +128,33 @@ public class TransactionService {
                 resolvedFromDate,
                 resolvedToDate,
                 accountId
+        );
+    }
+
+    public List<MonthlyTotalResponse> sumMonthly(LocalDate fromDate, LocalDate toDate, UUID accountId) {
+
+        LocalDate resolvedFromDate = (fromDate != null) ? fromDate : LocalDate.of(1970, 1, 1);
+        LocalDate resolvedToDate = (toDate != null) ? toDate : LocalDate.of(2999, 12, 31);
+
+        return transactionRepository.sumMonthly(
+                TEST_USER_ID,
+                resolvedFromDate,
+                resolvedToDate,
+                accountId
+        );
+    }
+
+    public TransactionTotalResponse sumTotal(LocalDate fromDate, LocalDate toDate, UUID accountId, UUID categoryId) {
+
+        LocalDate resolvedFromDate = (fromDate != null) ? fromDate : LocalDate.of(1970, 1, 1);
+        LocalDate resolvedToDate = (toDate != null) ? toDate : LocalDate.of(2999, 12, 31);
+
+        return transactionRepository.sumTotal(
+                TEST_USER_ID,
+                resolvedFromDate,
+                resolvedToDate,
+                accountId,
+                categoryId
         );
     }
 }

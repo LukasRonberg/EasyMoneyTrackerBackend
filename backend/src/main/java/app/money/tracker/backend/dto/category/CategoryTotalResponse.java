@@ -1,4 +1,4 @@
-package app.money.tracker.backend.dto;
+package app.money.tracker.backend.dto.category;
 
 import lombok.Getter;
 
