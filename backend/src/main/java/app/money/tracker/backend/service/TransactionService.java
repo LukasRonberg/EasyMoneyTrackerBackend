@@ -1,5 +1,6 @@
 package app.money.tracker.backend.service;
 
+import app.money.tracker.backend.dto.CategoryTotalResponse;
 import app.money.tracker.backend.dto.CreateTransactionRequest;
 import app.money.tracker.backend.dto.TransactionResponse;
 import app.money.tracker.backend.entity.AccountEntity;
@@ -68,14 +69,37 @@ public class TransactionService {
         return transaction.getId();
     }
 
-    public List<TransactionEntity> listTransactions(LocalDate fromDate, LocalDate toDate, UUID accountId) {
+    public List<TransactionEntity> listTransactions(LocalDate fromDate,
+                                                    LocalDate toDate,
+                                                    UUID accountId,
+                                                    UUID categoryId) {
+        boolean noFilters = fromDate == null && toDate == null && accountId == null && categoryId == null;
 
-        if (fromDate == null && toDate == null && accountId == null) {
+        if (noFilters) {
             return transactionRepository.findByUserIdOrderByTransactionDateDesc(TEST_USER_ID);
         }
 
         LocalDate resolvedFromDate = (fromDate != null) ? fromDate : LocalDate.of(1970, 1, 1);
         LocalDate resolvedToDate = (toDate != null) ? toDate : LocalDate.of(2999, 12, 31);
+
+        if (accountId != null && categoryId != null) {
+            return transactionRepository.findByUserIdAndAccountIdAndCategoryIdAndTransactionDateBetweenOrderByTransactionDateDesc(
+                    TEST_USER_ID,
+                    accountId,
+                    categoryId,
+                    resolvedFromDate,
+                    resolvedToDate
+            );
+        }
+
+        if (categoryId != null) {
+            return transactionRepository.findByUserIdAndCategoryIdAndTransactionDateBetweenOrderByTransactionDateDesc(
+                    TEST_USER_ID,
+                    categoryId,
+                    resolvedFromDate,
+                    resolvedToDate
+            );
+        }
 
         if (accountId != null) {
             return transactionRepository.findByUserIdAndAccountIdAndTransactionDateBetweenOrderByTransactionDateDesc(
@@ -90,6 +114,19 @@ public class TransactionService {
                 TEST_USER_ID,
                 resolvedFromDate,
                 resolvedToDate
+        );
+    }
+
+    public List<CategoryTotalResponse> sumByCategory(LocalDate fromDate, LocalDate toDate, UUID accountId) {
+
+        LocalDate resolvedFromDate = (fromDate != null) ? fromDate : LocalDate.of(1970, 1, 1);
+        LocalDate resolvedToDate = (toDate != null) ? toDate : LocalDate.of(2999, 12, 31);
+
+        return transactionRepository.sumByCategory(
+                TEST_USER_ID,
+                resolvedFromDate,
+                resolvedToDate,
+                accountId
         );
     }
 }

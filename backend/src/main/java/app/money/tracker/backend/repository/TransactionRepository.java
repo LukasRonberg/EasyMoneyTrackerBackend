@@ -1,7 +1,10 @@
 package app.money.tracker.backend.repository;
 
+import app.money.tracker.backend.dto.CategoryTotalResponse;
 import app.money.tracker.backend.entity.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,5 +24,41 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
             UUID accountId,
             LocalDate fromDate,
             LocalDate toDate
+    );
+
+    List<TransactionEntity> findByUserIdAndCategoryIdAndTransactionDateBetweenOrderByTransactionDateDesc(
+            UUID userId,
+            UUID categoryId,
+            LocalDate fromDate,
+            LocalDate toDate
+    );
+
+    List<TransactionEntity> findByUserIdAndAccountIdAndCategoryIdAndTransactionDateBetweenOrderByTransactionDateDesc(
+            UUID userId,
+            UUID accountId,
+            UUID categoryId,
+            LocalDate fromDate,
+            LocalDate toDate
+    );
+
+    @Query("""
+    select new app.money.tracker.backend.dto.CategoryTotalResponse(
+        c.id,
+        coalesce(c.name, 'Uncategorized'),
+        coalesce(sum(t.amount), 0)
+    )
+    from TransactionEntity t
+    left join t.category c
+    where t.user.id = :userId
+      and t.transactionDate between :fromDate and :toDate
+      and (:accountId is null or t.account.id = :accountId)
+    group by c.id, c.name
+    order by coalesce(sum(t.amount), 0) desc
+""")
+    List<CategoryTotalResponse> sumByCategory(
+            @Param("userId") UUID userId,
+            @Param("fromDate") LocalDate fromDate,
+            @Param("toDate") LocalDate toDate,
+            @Param("accountId") UUID accountId
     );
 }

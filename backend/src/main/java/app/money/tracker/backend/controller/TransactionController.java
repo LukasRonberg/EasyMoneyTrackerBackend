@@ -1,5 +1,6 @@
 package app.money.tracker.backend.controller;
 
+import app.money.tracker.backend.dto.CategoryTotalResponse;
 import app.money.tracker.backend.dto.CreateTransactionRequest;
 import app.money.tracker.backend.dto.TransactionResponse;
 import app.money.tracker.backend.service.TransactionService;
@@ -29,9 +30,10 @@ public class TransactionController {
     public ResponseEntity<List<TransactionResponse>> listTransactions(
             @RequestParam(required = false) LocalDate fromDate,
             @RequestParam(required = false) LocalDate toDate,
-            @RequestParam(required = false) UUID accountId) {
+            @RequestParam(required = false) UUID accountId,
+            @RequestParam(required = false) UUID categoryId) {
         List<TransactionResponse> transactions = transactionService
-                .listTransactions(fromDate, toDate, accountId)
+                .listTransactions(fromDate, toDate, accountId,categoryId)
                 .stream()
                 .map(transaction -> TransactionResponse.builder()
                         .id(transaction.getId())
@@ -48,5 +50,14 @@ public class TransactionController {
                 .toList();
 
         return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/summary/categories")
+    public ResponseEntity<List<CategoryTotalResponse>> categorySummary(
+            @RequestParam(required = false) LocalDate fromDate,
+            @RequestParam(required = false) LocalDate toDate,
+            @RequestParam(required = false) UUID accountId
+    ) {
+        return ResponseEntity.ok(transactionService.sumByCategory(fromDate, toDate, accountId));
     }
 }
