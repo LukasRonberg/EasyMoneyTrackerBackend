@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>3.4.13</version>
         <relativePath/>
     </parent>
 
@@ -27,6 +27,7 @@
 
         <!-- CVE fixes for transitive logback via spring-boot-starter-logging -->
         <logback.version>1.5.26</logback.version>
+        <assertj.version>3.27.7</assertj.version>
     </properties>
 
     <build>

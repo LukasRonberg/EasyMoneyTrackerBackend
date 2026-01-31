@@ -15,3 +15,6 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+
+  app:
+    testUserId: "0d55a075-ac15-46c1-84f9-fa175c0de90d"
