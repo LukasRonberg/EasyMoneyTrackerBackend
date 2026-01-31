@@ -3,9 +3,11 @@ package app.money.tracker.backend.service;
 import app.money.tracker.backend.dto.CreateTransactionRequest;
 import app.money.tracker.backend.dto.TransactionResponse;
 import app.money.tracker.backend.entity.AccountEntity;
+import app.money.tracker.backend.entity.CategoryEntity;
 import app.money.tracker.backend.entity.TransactionEntity;
 import app.money.tracker.backend.entity.UserEntity;
 import app.money.tracker.backend.repository.AccountRepository;
+import app.money.tracker.backend.repository.CategoryRepository;
 import app.money.tracker.backend.repository.TransactionRepository;
 import app.money.tracker.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
     public UUID createTransaction(CreateTransactionRequest request) {
 
@@ -38,12 +41,20 @@ public class TransactionService {
             throw new IllegalArgumentException("Account does not belong to user");
         }
 
+        CategoryEntity category = null;
+
+        if (request.getCategoryId() != null) {
+            category = categoryRepository.findByIdAndUserId(request.getCategoryId(), user.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+        }
+
         OffsetDateTime now = OffsetDateTime.now();
 
         TransactionEntity transaction = TransactionEntity.builder()
                 .id(UUID.randomUUID())
                 .user(user)
                 .account(account)
+                .category(category)
                 .amount(request.getAmount())
                 .transactionDate(request.getTransactionDate())
                 .description(request.getDescription())
