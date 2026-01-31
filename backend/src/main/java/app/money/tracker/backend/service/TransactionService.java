@@ -12,6 +12,7 @@ import app.money.tracker.backend.repository.AccountRepository;
 import app.money.tracker.backend.repository.CategoryRepository;
 import app.money.tracker.backend.repository.TransactionRepository;
 import app.money.tracker.backend.repository.UserRepository;
+import app.money.tracker.backend.security.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TransactionService {
 
-    private static final UUID TEST_USER_ID = UUID.fromString("0d55a075-ac15-46c1-84f9-fa175c0de90d");
+    private final UserContext userContext;
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
@@ -33,7 +34,7 @@ public class TransactionService {
 
     public UUID createTransaction(CreateTransactionRequest request) {
 
-        UserEntity user = userRepository.findById(TEST_USER_ID)
+        UserEntity user = userRepository.findById(userContext.getCurrentUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         AccountEntity account = accountRepository.findById(request.getAccountId())
@@ -77,7 +78,7 @@ public class TransactionService {
         boolean noFilters = fromDate == null && toDate == null && accountId == null && categoryId == null;
 
         if (noFilters) {
-            return transactionRepository.findByUserIdOrderByTransactionDateDesc(TEST_USER_ID);
+            return transactionRepository.findByUserIdOrderByTransactionDateDesc(userContext.getCurrentUserId());
         }
 
         LocalDate resolvedFromDate = (fromDate != null) ? fromDate : LocalDate.of(1970, 1, 1);
@@ -85,7 +86,7 @@ public class TransactionService {
 
         if (accountId != null && categoryId != null) {
             return transactionRepository.findByUserIdAndAccountIdAndCategoryIdAndTransactionDateBetweenOrderByTransactionDateDesc(
-                    TEST_USER_ID,
+                    userContext.getCurrentUserId(),
                     accountId,
                     categoryId,
                     resolvedFromDate,
@@ -95,7 +96,7 @@ public class TransactionService {
 
         if (categoryId != null) {
             return transactionRepository.findByUserIdAndCategoryIdAndTransactionDateBetweenOrderByTransactionDateDesc(
-                    TEST_USER_ID,
+                    userContext.getCurrentUserId(),
                     categoryId,
                     resolvedFromDate,
                     resolvedToDate
@@ -104,7 +105,7 @@ public class TransactionService {
 
         if (accountId != null) {
             return transactionRepository.findByUserIdAndAccountIdAndTransactionDateBetweenOrderByTransactionDateDesc(
-                    TEST_USER_ID,
+                    userContext.getCurrentUserId(),
                     accountId,
                     resolvedFromDate,
                     resolvedToDate
@@ -112,7 +113,7 @@ public class TransactionService {
         }
 
         return transactionRepository.findByUserIdAndTransactionDateBetweenOrderByTransactionDateDesc(
-                TEST_USER_ID,
+                userContext.getCurrentUserId(),
                 resolvedFromDate,
                 resolvedToDate
         );
@@ -124,7 +125,7 @@ public class TransactionService {
         LocalDate resolvedToDate = (toDate != null) ? toDate : LocalDate.of(2999, 12, 31);
 
         return transactionRepository.sumByCategory(
-                TEST_USER_ID,
+                userContext.getCurrentUserId(),
                 resolvedFromDate,
                 resolvedToDate,
                 accountId
@@ -137,7 +138,7 @@ public class TransactionService {
         LocalDate resolvedToDate = (toDate != null) ? toDate : LocalDate.of(2999, 12, 31);
 
         return transactionRepository.sumMonthly(
-                TEST_USER_ID,
+                userContext.getCurrentUserId(),
                 resolvedFromDate,
                 resolvedToDate,
                 accountId
@@ -150,7 +151,7 @@ public class TransactionService {
         LocalDate resolvedToDate = (toDate != null) ? toDate : LocalDate.of(2999, 12, 31);
 
         return transactionRepository.sumTotal(
-                TEST_USER_ID,
+                userContext.getCurrentUserId(),
                 resolvedFromDate,
                 resolvedToDate,
                 accountId,

@@ -5,6 +5,7 @@ import app.money.tracker.backend.entity.UserEntity;
 import app.money.tracker.backend.enums.CategoryType;
 import app.money.tracker.backend.repository.CategoryRepository;
 import app.money.tracker.backend.repository.UserRepository;
+import app.money.tracker.backend.security.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +17,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private static final UUID TEST_USER_ID =
-            UUID.fromString("0d55a075-ac15-46c1-84f9-fa175c0de90d");
+    private final UserContext userContext;
 
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
     public CategoryEntity createCategory(String name, CategoryType type) {
 
-        UserEntity user = userRepository.findById(TEST_USER_ID)
+        UserEntity user = userRepository.findById(userContext.getCurrentUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         CategoryEntity category = CategoryEntity.builder()
@@ -39,6 +39,6 @@ public class CategoryService {
     }
 
     public List<CategoryEntity> listCategories() {
-        return categoryRepository.findByUserId(TEST_USER_ID);
+        return categoryRepository.findByUserId(userContext.getCurrentUserId());
     }
 }

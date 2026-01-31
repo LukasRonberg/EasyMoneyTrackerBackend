@@ -111,3 +111,6 @@ pnpm-debug.log*
 ########################################
 **/docker-data/
 **/volumes/
+
+# Spring Boot local config
+backend/src/main/resources/application.yaml
