@@ -44,7 +44,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     );
 
     @Query("""
-    select new app.money.tracker.backend.dto.CategoryTotalResponse(
+    select new app.money.tracker.backend.dto.category.CategoryTotalResponse(
         c.id,
         coalesce(c.name, 'Uncategorized'),
         coalesce(sum(t.amount), 0)
@@ -65,7 +65,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     );
 
     @Query("""
-    select new app.money.tracker.backend.dto.MonthlyTotalResponse(
+    select new app.money.tracker.backend.dto.category.MonthlyTotalResponse(
         cast(function('date_trunc', 'month', t.transactionDate) as java.time.LocalDate),
         coalesce(sum(t.amount), 0)
     )
@@ -84,7 +84,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     );
 
     @Query("""
-    select new app.money.tracker.backend.dto.TransactionTotalResponse(
+    select new app.money.tracker.backend.dto.transactions.TransactionTotalResponse(
         coalesce(sum(t.amount), 0)
     )
     from TransactionEntity t

@@ -1,8 +1,7 @@
-package app.money.tracker.backend.controller;
+package app.money.tracker.controller;
 
 import app.money.tracker.backend.config.ApiExceptionHandler;
-import app.money.tracker.backend.dto.category.CategoryTotalResponse;
-import app.money.tracker.backend.dto.category.MonthlyTotalResponse;
+import app.money.tracker.backend.controller.TransactionController;
 import app.money.tracker.backend.dto.transactions.CreateTransactionRequest;
 import app.money.tracker.backend.dto.transactions.TransactionTotalResponse;
 import app.money.tracker.backend.entity.AccountEntity;
