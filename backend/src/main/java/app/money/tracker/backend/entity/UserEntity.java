@@ -28,6 +28,9 @@ public class UserEntity {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
+
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 }

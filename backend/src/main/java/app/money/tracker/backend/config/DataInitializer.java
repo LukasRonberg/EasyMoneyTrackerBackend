@@ -7,6 +7,7 @@ import app.money.tracker.backend.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -15,7 +16,9 @@ import java.util.UUID;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initData(UserRepository userRepository, AccountRepository accountRepository) {
+    CommandLineRunner initData(UserRepository userRepository,
+                               AccountRepository accountRepository,
+                               PasswordEncoder passwordEncoder) {
         return arguments -> {
 
             if (userRepository.count() > 0) {
@@ -25,6 +28,7 @@ public class DataInitializer {
             UserEntity user = UserEntity.builder()
                     .id(UUID.randomUUID())
                     .email("test@local.dev")
+                    .passwordHash(passwordEncoder.encode("ChangeMe123!"))
                     .createdAt(OffsetDateTime.now())
                     .build();
 
