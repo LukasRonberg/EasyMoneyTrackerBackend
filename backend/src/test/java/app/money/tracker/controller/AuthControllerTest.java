@@ -96,7 +96,7 @@ public class AuthControllerTest extends AbstractTestNGSpringContextTests {
         if (csrfCookie == null) {
             csrfCookie = new Cookie("XSRF-TOKEN", csrfToken);
         }
-        log.info("CSRF header={} token={} cookiePresent={}", csrfHeader, csrfToken, csrfCookie != null);
+        log.info("CSRF header={} token={}", csrfHeader, csrfToken);
 
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
