@@ -1,5 +1,6 @@
 package app.money.tracker.backend.dto.transactions;
 
+import app.money.tracker.backend.enums.TransactionType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +16,7 @@ public class TransactionResponse {
     private UUID id;
     private UUID accountId;
     private UUID categoryId;
+    private TransactionType transactionType;
     private BigDecimal amount;
     private LocalDate transactionDate;
     private String description;

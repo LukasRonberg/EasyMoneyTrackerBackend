@@ -35,9 +35,6 @@ public class CategoryEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 20)
-    private String type;
-
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 }

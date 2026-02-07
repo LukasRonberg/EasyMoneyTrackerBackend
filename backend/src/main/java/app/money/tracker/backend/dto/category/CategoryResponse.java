@@ -1,6 +1,5 @@
 package app.money.tracker.backend.dto.category;
 
-import app.money.tracker.backend.enums.CategoryType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,5 +11,4 @@ public class CategoryResponse {
 
     private UUID id;
     private String name;
-    private CategoryType type;
 }

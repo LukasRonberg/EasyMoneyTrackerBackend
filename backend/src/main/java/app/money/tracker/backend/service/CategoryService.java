@@ -2,7 +2,6 @@ package app.money.tracker.backend.service;
 
 import app.money.tracker.backend.entity.CategoryEntity;
 import app.money.tracker.backend.entity.UserEntity;
-import app.money.tracker.backend.enums.CategoryType;
 import app.money.tracker.backend.repository.CategoryRepository;
 import app.money.tracker.backend.repository.UserRepository;
 import app.money.tracker.backend.security.UserContext;
@@ -22,7 +21,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public CategoryEntity createCategory(String name, CategoryType type) {
+    public CategoryEntity createCategory(String name) {
 
         UserEntity user = userRepository.findById(userContext.getCurrentUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -31,7 +30,6 @@ public class CategoryService {
                 .id(UUID.randomUUID())
                 .user(user)
                 .name(name)
-                .type(type.name())
                 .createdAt(OffsetDateTime.now())
                 .build();
 

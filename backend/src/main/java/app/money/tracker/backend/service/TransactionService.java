@@ -44,12 +44,8 @@ public class TransactionService {
             throw new IllegalArgumentException("Account does not belong to user");
         }
 
-        CategoryEntity category = null;
-
-        if (request.getCategoryId() != null) {
-            category = categoryRepository.findByIdAndUserId(request.getCategoryId(), user.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-        }
+        CategoryEntity category = categoryRepository.findByIdAndUserId(request.getCategoryId(), user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
         OffsetDateTime now = OffsetDateTime.now();
 
@@ -59,6 +55,7 @@ public class TransactionService {
                 .account(account)
                 .category(category)
                 .amount(request.getAmount())
+                .transactionType(request.getTransactionType())
                 .transactionDate(request.getTransactionDate())
                 .description(request.getDescription())
                 .merchant(request.getMerchant())

@@ -1,6 +1,6 @@
 package app.money.tracker.backend.enums;
 
-public enum CategoryType {
+public enum TransactionType {
     INCOME,
     EXPENSE
 }

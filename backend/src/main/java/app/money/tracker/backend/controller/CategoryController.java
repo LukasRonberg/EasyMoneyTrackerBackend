@@ -21,19 +21,12 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> createCategory(
             @Valid @RequestBody CreateCategoryRequest request
     ) {
-        var category = categoryService.createCategory(
-                request.getName(),
-                request.getType()
-        );
+        var category = categoryService.createCategory(request.getName());
 
         return ResponseEntity.ok(
                 CategoryResponse.builder()
                         .id(category.getId())
                         .name(category.getName())
-                        .type(Enum.valueOf(
-                                app.money.tracker.backend.enums.CategoryType.class,
-                                category.getType()
-                        ))
                         .build()
         );
     }
@@ -45,10 +38,6 @@ public class CategoryController {
                 .map(category -> CategoryResponse.builder()
                         .id(category.getId())
                         .name(category.getName())
-                        .type(Enum.valueOf(
-                                app.money.tracker.backend.enums.CategoryType.class,
-                                category.getType()
-                        ))
                         .build()
                 )
                 .toList();
